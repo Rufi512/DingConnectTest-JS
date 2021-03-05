@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="./css/style.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="container-all">
+      <form id="form-container" class="container-reload">
+   
+        <div class="view-phone">
+          <img src="./static/icons/phone.svg" alt="smartphone" style="width: 25px" />
+          <p id="NumbersList">0</p>
+        </div>
+
+        <h2 style="text-align: center">Recharge Number</h2>
+
+        <div class="container-input">
+          <label>Mobile Number</label>
+          <div class="form-input">
+            <img src="./static/icons/phone.svg" alt="smartphone" style="width: 25px" />
+            <select style="width: 66px" name="prefix-list" id="prefix-list"></select>
+            <input
+              type="text"
+              id="number"
+              placeholder="Input phone number"
+              name="number"
+            />
+          </div>
+        </div>
+
+        <!-- Operator list -->
+        <div class="container-input">
+          <label>Choose Operator</label>
+          <div id="operator-list"></div>
+        </div>
+
+        <!-- Pay list -->
+        <div class="container-input">
+          <div class="pay-list">
+            <label>Balance to send</label>
+            <div id="pay-list option-recharge">
+              <select
+                style="margin-left: -3px; margin-top: 5px"
+                id="option-recharge"
+                name="paid"
+              ></select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="container-buttons">
+          <button type="submit" id="add">+ Add Number</button>
+          <button type="submit" id="send">Send Paid</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="screen-confirm">
+  
+        <p style="font-size: 20px; font-weight: bold;">Are you sure?</p>
+
+        <div id="phones-recharge" 
+         style="display: flex;
+                flex-direction: row;
+                 justify-content: space-around;
+                 flex-flow:wrap;
+                 overflow-y:auto;"></div>
+      
+
+      <div style="margin-top: 14px; margin-left: -3px; display: flex;justify-content: space-around;">
+      	<button onclick="cancelPaids()" style="box-shadow: none">Nop cancel All</button>
+        <button onclick="paidPhones()" style="box-shadow: none">Sure</button>
+      </div>
+
+    </div>
+    <script src="./js/script.js"></script>
+  </body>
+</html>

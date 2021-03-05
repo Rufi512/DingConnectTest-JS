@@ -1,0 +1,211 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: #252525;
+  font-family: "Roboto", sans-serif;
+}
+
+.container-all {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  max-width: 1300px;
+}
+
+.container-reload {
+  position: relative;
+  justify-content: space-around;
+  display: flex;
+  flex-direction: column;
+  background: rgb(165 67 226);
+  background: linear-gradient(142deg, rgb(165 67 226) 0%, rgb(91 92 206) 100%);
+  color: white;
+  width: 90%;
+  max-width: 605px;
+  min-height: inherit;
+  box-shadow: 0px 2px 13px #240961;
+  border-radius: 8px;
+  padding: 8px;
+  margin: auto;
+}
+
+.form-container,
+.form-input {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-container {
+  margin: auto;
+}
+
+.form-container p {
+  margin: 5px 0;
+}
+
+.form-input {
+  flex-direction: row;
+  align-items: center;
+  align-content: center;
+  margin: 15px 0px;
+  border: none;
+  border-bottom: 2px solid #d6d6d6;
+  transition: all 0.4s ease;
+}
+
+.container-input {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 8px 2px;
+}
+
+.container-input select,
+.container-input input[type="text"] {
+  width: 100%;
+  border: none;
+  background: none;
+  color: white;
+  font-size: 15px;
+  outline: 0;
+}
+
+.container-input input[type="text"] {
+  width: 100%;
+}
+
+.container-input input[type="text"]::placeholder {
+  color: white;
+}
+
+.container-input label {
+  color: #efefef;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.container-input select option {
+  color: black;
+}
+
+#operator-list {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-around;
+  flex-flow: wrap;
+}
+
+#operator-list img {
+  width: initial;
+  max-width: 140px;
+  height: inherit;
+  max-height: 55px;
+}
+
+.selectOperators {
+  position: relative;
+  width: 95%;
+  height: 70px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  font-size: 1em;
+  padding: 5px;
+  margin: 8px !important;
+  flex-flow: wrap;
+  border-radius: 5px;
+  justify-content: space-around;
+  text-align: center;
+  background-color: #4d3b78;
+}
+
+.selectOperators input[type="checkbox"] {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+}
+
+#pay-list {
+  display: flex;
+  flex-flow: wrap;
+}
+
+#pay-list div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+#pay-list div p {
+  margin: 2px;
+}
+
+.container-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
+button {
+  width: 157px;
+  border: none;
+  border-radius: 50px;
+  height: 40px;
+  font-size: 14px;
+  background-color: #292929;
+  color: white;
+  box-shadow: 0 1px 11px #6239f3;
+  outline: 0;
+  cursor: pointer;
+}
+
+.view-phone {
+  position: absolute;
+  top: 0px;
+  right: 5px;
+  width: 30px;
+  display: flex;
+  flex-direction: row-reverse;
+  cursor: pointer;
+}
+
+.screen-confirm {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  visibility: hidden;
+  z-index: -1;
+  background-color: #000000c9;
+  text-align: center;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.preview-paid {
+  width: 220px;
+  display: flex;
+  flex-direction: column;
+  background: #2f265f;
+  margin:10px;
+}
+
+
+@media (max-width: 540px) {
+  #operator-list img {
+    display: none;
+  }
+}
+
