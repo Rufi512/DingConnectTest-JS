@@ -4,11 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type="text/css" href="./css/style.css" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
-      rel="stylesheet"
-    />
+  
     <title>Document</title>
   </head>
   <body>
@@ -36,10 +32,19 @@
           </div>
         </div>
 
+       
+
         <!-- Operator list -->
         <div class="container-input">
           <label>Choose Operator</label>
           <div id="operator-list"></div>
+        </div>
+
+         <!-- Promotion list --->
+
+        <div class="container-promotions"> 
+             <label>Available promotions</label>
+             <div id="promotions-list"></div>
         </div>
 
         <!-- Pay list -->
@@ -82,6 +87,18 @@
       </div>
 
     </div>
+
+    <!-- Promotion Screen --->
+    <div class="promotion">
+      <label onClick="promotionDetails(null,false)">Salir</label>
+      <div>
+      <h2 id="promotion-operator"></h4>
+      <h3 id="promotion-type"></h5>
+        <p style="overflow: auto; border: 2px solid white; max-width: 768px;" id="promotion-terms"></p>
+        <h5 style="text-align: 'center'" id="promotion-bonus"></h5>
+      </div>
+    </div>
+
     <script src="./js/script.js"></script>
   </body>
 </html>

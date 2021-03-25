@@ -1,4 +1,4 @@
-const prefixList= document.getElementById("prefix-list");
+const prefixList = document.getElementById("prefix-list");
 const rechargeForm = document.getElementById("form-container");
 const numberPhone = document.getElementById("number");
 const button = document.getElementById("button-connect");
@@ -7,13 +7,15 @@ const currency = document.getElementById("currency");
 const operatorList = document.getElementById("operator-list");
 const optionRecharge = document.getElementById("option-recharge");
 const screen = document.querySelector(".screen-confirm");
+const promotionScreen = document.querySelector(".promotion");
 const numberList = document.getElementById("NumbersList");
+const promotionsList = document.getElementById("promotions-list")
 var country = [];
 var products = [];
 var listPreview = [];
 var numbersPhones = [];
 var operators = [];
-const apiKey = "HfKw98OJr2c5YbrUG5HqWd"
+const API_KEY = "HERE";
 
 const resetForm = () => {
   rechargeForm.reset();
@@ -33,23 +35,29 @@ const resetAll = () => {
 window.addEventListener("load", async () => {
   var countryWorld = [];
   /*Request Initial*/
-  const resCountry = await fetch("https://api.dingconnect.com/api/V1/GetCountries", {
-    method: "GET",
-    headers: {
-      api_key: apiKey,
-    },
-  });
+  const resCountry = await fetch(
+    "https://api.dingconnect.com/api/V1/GetCountries",
+    {
+      method: "GET",
+      headers: {
+        api_key: API_KEY,
+      },
+    }
+  );
 
   const response = await resCountry.json();
 
   country = response.Items;
 
-  const resOperators = await fetch("https://api.dingconnect.com/api/V1/GetProviders", {
-    method: "GET",
-    headers: {
-      api_key: apiKey,
-    },
-  });
+  const resOperators = await fetch(
+    "https://api.dingconnect.com/api/V1/GetProviders",
+    {
+      method: "GET",
+      headers: {
+        api_key: API_KEY,
+      },
+    }
+  );
 
   const responseOperators = await resOperators.json();
 
@@ -89,12 +97,13 @@ prefixList.addEventListener("change", (e) => {
   });
 
   operators.map((el, i) => {
-    if (el.CountryIso === e.target.value || el.RegionCodes[0] === e.target.value) {
-      //numberPhone.pattern = el.ValidationRegex
-
+    if (
+      el.CountryIso === e.target.value ||
+      el.RegionCodes[0] === e.target.value
+    ) {
       operatorList.innerHTML += `<div class="selectOperators" 
       id=${el.ProviderCode}
-      onClick="getOperatorSelect('${el.ProviderCode}','${el.CountryIso}','${el.ProviderCode}','${el.Name}')">
+      onClick="getOperatorSelect('${el.ProviderCode}','${el.CountryIso}','${el.ProviderCode}','${el.Name}'); getPromotions('${el.ProviderCode}')">
       <img src=${el.LogoUrl} alt=${el.Name} />
         <p style="margin:0;">${el.Name}</p>
              `;
@@ -107,7 +116,12 @@ prefixList.addEventListener("change", (e) => {
 
 /*Set Information Operator*/
 
-const getOperatorSelect = async (DistributorRef, CodeCountry, select, nameOperator) => {
+const getOperatorSelect = async (
+  DistributorRef,
+  CodeCountry,
+  select,
+  nameOperator
+) => {
   /*Show select on DOM*/
 
   const boxCheck = document.querySelectorAll(".selectOperators");
@@ -126,12 +140,11 @@ const getOperatorSelect = async (DistributorRef, CodeCountry, select, nameOperat
     {
       method: "GET",
       headers: {
-        api_key: "HfKw98OJr2c5YbrUG5HqWd",
+        api_key: API_KEY,
       },
     }
   );
   const response = await res.json();
-
   response.Items.map((el) => {
     optionRecharge.innerHTML += `<option 
     
@@ -151,47 +164,138 @@ const getOperatorSelect = async (DistributorRef, CodeCountry, select, nameOperat
   });
 };
 
+const getPromotions = async (providerCode) => {
+  promotionsList.innerHTML = "" 
+  document.querySelector('.container-promotions').style.display = "none"
+  let dataPromotions
+  try {
+  dataPromotions = await Promise.all([
+      //Get all the promotions available from the operator and extract the LocalizationKey
+      fetch(
+        `https://api.dingconnect.com/api/V1/GetPromotions?providerCodes=${providerCode}`,
+        {
+          method: "GET",
+
+          headers: {
+            "Content-Type": "application/json",
+            api_key: API_KEY,
+          },
+        }
+      ).then((response) => response.json()),
+      //Get all the promotions and filter them with the previously obtained LocalizationKey
+
+      fetch(
+        `https://api.dingconnect.com/api/V1/GetPromotionDescriptions`,
+        {
+          method: "GET",
+
+          headers: {
+            "Content-Type": "application/json",
+            api_key: API_KEY,
+          },
+        }
+      ).then((response) => response.json()),
+    ]);
+
+  } catch (error) {
+    console.log(error);
+  }
+
+
+
+if(dataPromotions[0].Items[0]){
+  document.querySelector('.container-promotions').style.display = "block"
+
+  dataPromotions[1].Items.map((el,i)=>{
+    if(el.LocalizationKey === dataPromotions[0].Items[0].LocalizationKey){
+     return( promotionsList.innerHTML += `<div class="promotions"
+       data-TermsAndConditionsMarkDown='${el.TermsAndConditionsMarkDown}' 
+       data-BonusValidity='${el.BonusValidity}'
+       data-Headline='${el.Headline}'
+       data-PromotionType='${el.PromotionType}'
+       onClick="promotionDetails(this,true)">
+       <p style="cursor:Pointer">${el.PromotionType} Language: ${el.LanguageCode}</p>
+      </div>`)
+    }
+
+
+ return ''
+  })
+}
+
+};
+
+//Show promotions Details 
+
+const promotionDetails = (elements,show) =>{
+if(show){
+  document.getElementsByTagName("body")[0].style.overflowY = "hidden";
+  promotionScreen.style.opacity = '1'
+  promotionScreen.style.visibility = 'visible'
+  const Headline = elements.getAttribute('data-Headline')
+  const BonusValidity = elements.getAttribute('data-BonusValidity')
+  const PromotionType = elements.getAttribute('data-PromotionType')
+  const TermsAndConditionsMarkDown = elements.getAttribute('data-TermsAndConditionsMarkDown')
+  document.getElementById("promotion-operator").innerHTML = Headline
+  document.getElementById("promotion-type").innerHTML = PromotionType
+  document.getElementById("promotion-terms").innerHTML = TermsAndConditionsMarkDown
+  document.getElementById("promotion-bonus").innerHTML = BonusValidity
+
+}else{
+  promotionScreen.style.opacity = '0'
+  promotionScreen.style.visibility = 'hidden'
+  document.getElementsByTagName("body")[0].style.overflowY = "unset";
+}
+
+
+
+}
+
 /*Add Form*/
 
 rechargeForm.addEventListener("submit", (e) => {
   e.preventDefault();
 
-  
-
   if (e.submitter.id === "send") {
-    if(numbersPhones.length === 0){
-    return alert("You need add number phone to process paid!")
-  }
+    if (numbersPhones.length === 0) {
+      return alert("You need add number phone to process paid!");
+    }
     return showConfirm();
   }
-  
+
   /*Provider*/
-  const Provider = optionRecharge.options[optionRecharge.selectedIndex].getAttribute("data-Provider");
+  const Provider = optionRecharge.options[
+    optionRecharge.selectedIndex
+  ].getAttribute("data-Provider");
   /*SkuCode*/
-  const SkuCode = optionRecharge.options[optionRecharge.selectedIndex].getAttribute("data-SkuCode");
+  const SkuCode = optionRecharge.options[
+    optionRecharge.selectedIndex
+  ].getAttribute("data-SkuCode");
 
   /*SendValue*/
-  const SendValue = optionRecharge.options[optionRecharge.selectedIndex].getAttribute("data-SendValue");
+  const SendValue = optionRecharge.options[
+    optionRecharge.selectedIndex
+  ].getAttribute("data-SendValue");
 
   /*ReceiveValue*/
-  const ReceiveValue = optionRecharge.options[optionRecharge.selectedIndex].getAttribute(
-    "data-ReceiveValue"
-  );
+  const ReceiveValue = optionRecharge.options[
+    optionRecharge.selectedIndex
+  ].getAttribute("data-ReceiveValue");
 
   /*ReceiveCurrencyIso*/
-  const ReceiveCurrencyIso = optionRecharge.options[optionRecharge.selectedIndex].getAttribute(
-    "data-ReceiveCurrencyIso"
-  );
+  const ReceiveCurrencyIso = optionRecharge.options[
+    optionRecharge.selectedIndex
+  ].getAttribute("data-ReceiveCurrencyIso");
 
   /*SendCurrencyIso*/
-  const SendCurrencyIso = optionRecharge.options[optionRecharge.selectedIndex].getAttribute(
-    "data-SendCurrencyIso"
-  );
+  const SendCurrencyIso = optionRecharge.options[
+    optionRecharge.selectedIndex
+  ].getAttribute("data-SendCurrencyIso");
 
   /*NameOperator*/
-  const nameOperator = optionRecharge.options[optionRecharge.selectedIndex].getAttribute(
-    "data-NameOperator"
-  );
+  const nameOperator = optionRecharge.options[
+    optionRecharge.selectedIndex
+  ].getAttribute("data-NameOperator");
 
   if (Provider && SkuCode && SendValue && SendCurrencyIso) {
     var rechargePhone = {
@@ -215,7 +319,6 @@ rechargeForm.addEventListener("submit", (e) => {
       }`,
       DistributorRef: Provider,
       NameOperator: nameOperator,
-      ValidateOnly: true,
     };
 
     const jsonSend = JSON.stringify(rechargePhone);
@@ -235,12 +338,12 @@ const showConfirm = () => {
   screen.style.opacity = "1";
   screen.style.visibility = "visible";
   screen.style.zIndex = 10000;
-  document.getElementsByTagName('body')[0].style.overflowY = 'hidden'
+  document.getElementsByTagName("body")[0].style.overflowY = "hidden";
   const phonesToRecharge = document.getElementById("phones-recharge");
   phonesToRecharge.innerHTML = "";
 
   /*Sample payment details list*/
-  
+
   listPreview.map((el) => {
     const element = JSON.parse(el);
     return (phonesToRecharge.innerHTML += ` <div class="preview-paid">
@@ -256,7 +359,7 @@ const cancelPaids = () => {
   screen.style.opacity = "0";
   screen.style.visibility = "hidden";
   screen.style.zIndex = -1;
-  document.getElementsByTagName('body')[0].style.overflowY = 'auto'
+  document.getElementsByTagName("body")[0].style.overflowY = "auto";
   resetAll();
 };
 
@@ -264,18 +367,20 @@ const paidPhones = async () => {
   screen.style.opacity = "0";
   screen.style.visibility = "hidden";
   screen.style.zIndex = -1;
-  document.getElementsByTagName('body')[0].style.overflowY = 'auto'
- 
+  document.getElementsByTagName("body")[0].style.overflowY = "auto";
+
   for await (const el of numbersPhones) {
-  
-    const post = await fetch(`https://api.dingconnect.com/api/V1/SendTransfer`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        api_key: apiKey,
-      },
-      body: el,
-    });
+    const post = await fetch(
+      `https://api.dingconnect.com/api/V1/SendTransfer`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          api_key: API_KEY,
+        },
+        body: el,
+      }
+    );
 
     const resPost = await post.json();
     console.log(resPost);
